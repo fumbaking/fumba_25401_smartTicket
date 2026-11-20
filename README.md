@@ -10,7 +10,7 @@
 | **Instructor** | Eric Maniraguha |
 | **Academic year** | 2026–2027, Semester I |
 | **Repository** | https://github.com/fumbaking/fumba_25401_smartTicket |
-| **Current phase** | Phases I and II done; next: Phase III (PDB creation) |
+| **Current phase** | Phases I–III done; next: Phase IV (tables and data loading) |
 
 ## Deliverables by phase
 
@@ -21,7 +21,7 @@ Files stay in the folders that each phase's instructions require. This index gro
 | 0 | Research, data source, proposal | ✅ Done |
 | I | Business process modelling (BPMN/UML swimlane) | ✅ Done |
 | II | Data sourcing, normalisation, logical design | ✅ Done |
-| III | Pluggable database (PDB) creation | ⏳ Not started |
+| III | Pluggable database (PDB) creation | ✅ Done |
 | IV | Tables and data loading | ⏳ Not started |
 | V | PL/SQL development | ⏳ Not started |
 | VI | Advanced programming and auditing | ⏳ Not started |
@@ -70,7 +70,28 @@ Files stay in the folders that each phase's instructions require. This index gro
 | [scripts/phase2/data_quality_profile.js](scripts/phase2/data_quality_profile.js) · [csv.js](scripts/phase2/csv.js) | Script that produces the quality counts in the dataset card |
 | [scripts/phase2/erd.js](scripts/phase2/erd.js) | Script that draws `erd.png` |
 
-### Phases III–VII
+### Phase III: Database (PDB) Creation
+
+Oracle Database 21c Enterprise Edition 21.3 (local install, CDB `orcl`).
+
+| Item | Value |
+|---|---|
+| PDB | `b_25401_fumba_smartticket_db` (open, state saved) |
+| Admin user | `fumba_admin`, DBA role, default tablespace `smartticket_data`, temporary `smartticket_temp` |
+| Tablespaces | `smartticket_data` 100M → 1G · `smartticket_idx` 50M → 500M · `smartticket_temp` 50M → 500M (all AUTOEXTEND ON NEXT 10M) |
+| Archive logging | ARCHIVELOG enabled on the CDB (local install only) |
+| EM Express | https://localhost:5501/em |
+
+| File | What it is |
+|---|---|
+| [database/setup/01_create_pdb.sql](database/setup/01_create_pdb.sql) | Create, open and save the state of the PDB |
+| [database/setup/02_create_user.sql](database/setup/02_create_user.sql) | Grant DBA to `fumba_admin`, set the EM Express port, test the connection |
+| [database/setup/03_tablespaces.sql](database/setup/03_tablespaces.sql) | Data, index and temporary tablespaces; user defaults and quotas |
+| [database/setup/04_archive_log.sql](database/setup/04_archive_log.sql) | Archive log check, why it is a CDB setting, steps to enable it |
+| [database/setup/05_verify.sql](database/setup/05_verify.sql) | Verification queries; output in [screenshots/05_verify_output.txt](screenshots/05_verify_output.txt) |
+| [screenshots/](screenshots/) | SQL\*Plus, SQL Developer and EM Express screenshots for Tasks 1–5 |
+
+### Phases IV–VII
 
 *Not started yet.* New files will be listed under their phase here.
 
@@ -208,9 +229,11 @@ fumba_25401_smartTicket/
 │   ├── presentation/     # [Phase 0] slides (.pptx and .pdf)
 │   ├── business_process/ # [Phase I] BPMN diagram (.drawio, .pdf, .png), explanation .pdf
 │   └── design/           # [Phase II] normalization.md, erd.png, data_dictionary.md
+├── database/setup/       # [Phase III] 01–05 SQL scripts: PDB, user, tablespaces, archive log, verify
+├── screenshots/          # [Phase III] evidence screenshots and verify output
 ├── scripts/phase1/       # [Phase I] BPMN generator and explanation source
 ├── scripts/phase2/       # [Phase II] data-quality profile and ERD generator (Node.js)
-└── (later phases add: database/ [III–VI], innovation/ [VII])
+└── (later phases add: more of database/ [IV–VI], innovation/ [VII])
 ```
 
 ## 9. References

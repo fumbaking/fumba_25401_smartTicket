@@ -1,0 +1,51 @@
+
+PDB_NAME                       USERNAME       RUN_AT
+------------------------------ -------------- -------------------
+B_25401_FUMBA_SMARTTICKET_DB   FUMBA_ADMIN    2026-11-20 19:51:50
+
+
+NAME                           OPEN_MODE    CREATED
+------------------------------ ------------ ----------------
+B_25401_FUMBA_SMARTTICKET_DB   READ WRITE   2026-11-20 19:29
+
+
+USERNAME       DEFAULT_TABLESPACE TEMPORARY_TABLESPACE ACCOUNT_STATUS
+-------------- ------------------ -------------------- --------------------------------
+FUMBA_ADMIN    SMARTTICKET_DATA   SMARTTICKET_TEMP     OPEN
+
+
+GRANTED_ROLE
+--------------------------------------------------------------------------------------------------------------------------------
+DBA
+PDB_DBA
+
+
+TABLESPACE_NAME    MAX_QUOTA
+------------------ ----------
+SMARTTICKET_DATA   UNLIMITED
+SMARTTICKET_IDX    UNLIMITED
+
+
+TABLESPACE_NAME    CONTENTS      SIZE_MB AUTO    NEXT_MB     MAX_MB
+------------------ ---------- ---------- ---- ---------- ----------
+SMARTTICKET_DATA   PERMANENT         100 YES          10       1024
+SMARTTICKET_IDX    PERMANENT          50 YES          10        500
+SMARTTICKET_TEMP   TEMPORARY          50 YES          10        500
+
+
+TABLESPACE_NAME    FILE_NAME
+------------------ --------------------------------------------------------------------------------
+SMARTTICKET_DATA   D:\APP\ORACLE\ORADATA\ORCL\B_25401_FUMBA_SMARTTICKET_DB\SMARTTICKET_DATA01.DBF
+SMARTTICKET_IDX    D:\APP\ORACLE\ORADATA\ORCL\B_25401_FUMBA_SMARTTICKET_DB\SMARTTICKET_IDX01.DBF
+SMARTTICKET_TEMP   D:\APP\ORACLE\ORADATA\ORCL\B_25401_FUMBA_SMARTTICKET_DB\SMARTTICKET_TEMP01.DBF
+
+
+NAME                           LOG_MODE
+------------------------------ ------------
+ORCL                           ARCHIVELOG
+
+
+EM_HTTPS_PORT
+-------------
+         5501
+
