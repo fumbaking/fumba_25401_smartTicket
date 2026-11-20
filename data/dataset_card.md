@@ -31,7 +31,7 @@ There is **none**. Records describe venues, public sports teams and bands, event
 
 ## 4. Data-quality report (counts, not fixed yet)
 
-The counts come from `scripts/phase2/data_quality_profile.js`, run over `data/raw/` on 20 Nov 2026. Per the Phase II rules, **nothing has been fixed**: each issue becomes a Phase IV cleaning task.
+The counts were measured over `data/raw/` on 20 Nov 2026. Per the Phase II rules, **nothing has been fixed**: each issue becomes a Phase IV cleaning task.
 
 ### 4.1 Duplicates and keys
 

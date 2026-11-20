@@ -52,7 +52,6 @@ Files stay in the folders that each phase's instructions require. This index gro
 | [docs/business_process/business_process_diagram.pdf](docs/business_process/business_process_diagram.pdf) · [.png](docs/business_process/business_process_diagram.png) | Exported diagram: 23 numbered tasks, 6 decisions, CRUD marks on every data activity |
 | [docs/business_process/business_process_explanation.pdf](docs/business_process/business_process_explanation.pdf) | Process definition, actors and responsibilities, data-generating activities (C/R/U per task), one-page process explanation |
 | [docs/business_process/business_process_model.drawio](docs/business_process/business_process_model.drawio) | Editable diagram (open in https://app.diagrams.net) |
-| [scripts/phase1/bpmn.js](scripts/phase1/bpmn.js) · [business_process_explanation.html](scripts/phase1/business_process_explanation.html) | Generator for the `.drawio` file and the source of the explanation PDF |
 
 ![Business process diagram](docs/business_process/business_process_diagram.png)
 
@@ -67,8 +66,6 @@ Files stay in the folders that each phase's instructions require. This index gro
 | [docs/design/normalization.md](docs/design/normalization.md) | UNF → 1NF → 2NF → 3NF with real rows, mapping of every raw field, class-demo trace |
 | [docs/design/erd.png](docs/design/erd.png) · [erd.svg](docs/design/erd.svg) | Logical ERD, 16 tables, crow's-foot notation |
 | [docs/design/data_dictionary.md](docs/design/data_dictionary.md) | Every column: meaning, key, required, unique; relationships with cardinality and optionality |
-| [scripts/phase2/data_quality_profile.js](scripts/phase2/data_quality_profile.js) · [csv.js](scripts/phase2/csv.js) | Script that produces the quality counts in the dataset card |
-| [scripts/phase2/erd.js](scripts/phase2/erd.js) | Script that draws `erd.png` |
 
 ### Phase III: Database (PDB) Creation
 
@@ -297,8 +294,6 @@ fumba_25401_smartTicket/
 │   └── design/           # [Phase II] normalization.md, erd.png, data_dictionary.md
 ├── database/setup/       # [Phase III] 01–05 SQL scripts: PDB, user, tablespaces, archive log, verify
 ├── screenshots/          # [Phase III] evidence screenshots and verify output
-├── scripts/phase1/       # [Phase I] BPMN generator and explanation source
-├── scripts/phase2/       # [Phase II] data-quality profile and ERD generator (Node.js)
 └── (later phases add: more of database/ [IV–VI], innovation/ [VII])
 ```
 
