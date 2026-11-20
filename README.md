@@ -67,6 +67,10 @@ Files stay in the folders that each phase's instructions require. This index gro
 | [docs/design/erd.png](docs/design/erd.png) · [erd.svg](docs/design/erd.svg) | Logical ERD, 16 tables, crow's-foot notation |
 | [docs/design/data_dictionary.md](docs/design/data_dictionary.md) | Every column: meaning, key, required, unique; relationships with cardinality and optionality |
 
+**Logical ERD (16 tables, 3NF)**
+
+![SmartTicket logical ERD](docs/design/erd.png)
+
 ### Phase III: Database (PDB) Creation
 
 Oracle Database 21c Enterprise Edition 21.3 (local install, CDB `orcl`).
