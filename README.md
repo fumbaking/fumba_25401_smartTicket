@@ -36,7 +36,7 @@ There is no open, rule-enforcing database that guarantees **one seat → one sal
 **Main objective:** design and implement an Oracle database with PL/SQL that sells, validates and reports event tickets in real time, and that prevents double sales, scalping and fraudulent entry.
 
 **Specific objectives**
-1. Normalise the real SeatGeek events dataset into 3NF tables and load **1,364 events, 194 venues and 30,000 seat records**.
+1. Normalise the real SeatGeek events dataset into 3NF tables and load **1,364 events, 194 venues and the real seat positions from 30,000 listings** (see the [dataset card](data/dataset_card.md) for exact counts).
 2. Build a PL/SQL package that **books, pays for and cancels** tickets, with full exception handling.
 3. Enforce anti-fraud business rules with **triggers**: no double sale, a maximum of 6 tickets per customer per event, single-use gate entry, and no booking after the event has started.
 4. **Audit** every data change and every denied attempt, and apply the Phase VI weekday/holiday restriction rule.
