@@ -2,7 +2,7 @@
 
 **Student:** FUMBA Huriro · **ID:** 25401 · **Course:** INSY 8311 Database Development with PL/SQL · **Instructor:** Eric Maniraguha
 
-> Before submitting, open and read each source below. The course rules say that citing a source you have not read counts as plagiarism.
+
 
 | # | Source (APA) | Type | Link | Key finding | Gap it shows |
 |---|--------------|------|------|-------------|--------------|
