@@ -1,0 +1,78 @@
+<!doctype html>
+<!-- [Phase I] Source of docs/business_process/business_process_explanation.pdf (print with Chrome: A4, no headers) -->
+<html lang="en"><head><meta charset="utf-8"><title>SmartTicket – Phase I Business Process</title>
+<style>
+@page { size: A4; margin: 14mm 20mm 14mm 20mm; }
+body { font-family: "Times New Roman", Times, serif; font-size: 12pt; line-height: 1.15; text-align: justify; color: #000; margin: 0; }
+h1 { font-size: 15pt; text-align: center; margin: 0 0 2pt; }
+.sub { text-align: center; margin: 0 0 10pt; }
+h2 { font-size: 13pt; margin: 10pt 0 4pt; }
+h3 { font-size: 12pt; margin: 6pt 0 2pt; }
+p { margin: 0 0 6pt; }
+ul { margin: 0 0 6pt; padding-left: 18pt; } li { margin-bottom: 2pt; }
+table { border-collapse: collapse; width: 100%; margin: 2pt 0 8pt; font-size: 10pt; line-height: 1.1; text-align: left; }
+th, td { border: 1px solid #444; padding: 1.5pt 4pt; vertical-align: top; }
+th { background: #E8E8E8; }
+.c { color: #1B7F3B; font-weight: bold; } .r { color: #1F5FA8; font-weight: bold; } .u { color: #C25E00; font-weight: bold; }
+code { font-family: Consolas, "Courier New", monospace; font-size: 10pt; }
+.page { page-break-before: always; }
+.small { font-size: 10.5pt; }
+a { color: #1F4E9A; }
+</style></head><body>
+
+<h1>SmartTicket: Smart Event Ticketing System</h1>
+<p class="sub">Phase I – Business Process Modelling · INSY 8311 Database Development with PL/SQL<br>
+FUMBA Huriro · Student ID 25401 · AUCA, Faculty of IT · Instructor: Eric Maniraguha</p>
+
+<h2>1. The business process: ticket booking, payment and gate admission</h2>
+<p><b>Purpose.</b> This process covers what happens from the moment an event is put on sale until a ticket holder walks through the gate: a customer chooses seats, the seats are held, the customer pays, the booking is confirmed and the ticket is scanned once at the entrance. It is the core process of SmartTicket because every other function (reports, audit, the dashboard) depends on the records it creates.</p>
+<p><b>Objectives.</b> (1) Sell each seat to only one buyer. (2) Stop bulk buying by limiting a customer to 6 tickets per event. (3) Free seats that are held but not paid within 15 minutes. (4) Accept a ticket at the gate only once, and only for the right event. (5) Record every action, including refused ones, so organisers can see what happened.</p>
+<p><b>Expected outcome.</b> A paid booking with seats marked <code>SOLD</code>, a single <code>ADMITTED</code> scan per ticket on event day, and a complete audit trail. Refused requests end cleanly with a logged reason instead of a corrupted record.</p>
+<p><b>Problem addressed.</b> Ticketing in Kigali suffers from scalpers buying many cheap seats to resell, seats sold twice, and one screenshot of a QR code being used by several people. Organisers usually see only total sales, not the attempts that were blocked.</p>
+<p><b>Why it matters.</b> Ticket sales are the organiser's revenue, and a double sale or a fake entry costs money and trust and can make the venue unsafe if it is over capacity. Because the rules are written as PL/SQL in the database, the rules apply in the same way whichever app or counter sells the ticket.</p>
+
+<h2>2. Actors and responsibilities</h2>
+<table>
+<tr><th style="width:24%">Actor</th><th style="width:16%">Type</th><th>Responsibility in the process</th></tr>
+<tr><td>Customer (ticket buyer)</td><td>User</td><td>Browses open events, selects up to 6 seats, pays, receives the e-ticket (QR code) and presents it at the gate.</td></tr>
+<tr><td>Event Organiser</td><td>Department / management</td><td>Publishes the event, its price tiers and seats; watches sales, occupancy and fraud attempts on the dashboard and decides on actions (open more gates, release sections, flag a buyer).</td></tr>
+<tr><td>Gate Staff</td><td>Employees (venue)</td><td>Scan the QR code, admit the attendee when the database accepts the ticket, refuse entry and send the person to the help desk when it does not.</td></tr>
+<tr><td>Payment Provider (MTN MoMo, card processor)</td><td>External stakeholder</td><td>Takes the payment from the customer and returns a transaction reference and an approved / failed result.</td></tr>
+<tr><td>SmartTicket Database (Oracle PDB)</td><td>System</td><td>Enforces all business rules in PL/SQL (<code>pkg_ticketing</code>, <code>pkg_gate</code>, triggers): validates requests, holds and sells seats, checks payments, validates scans and writes <code>AUDIT_LOG</code>.</td></tr>
+<tr><td>Scheduler job (<code>DBMS_SCHEDULER</code>)</td><td>System</td><td>Runs every minute and releases holds older than 15 minutes, putting the seats back on sale.</td></tr>
+<tr><td>Power BI dashboard</td><td>System</td><td>Reads the database live (DirectQuery, read-only) and shows the organiser sales, occupancy and denied attempts.</td></tr>
+</table>
+
+<h2 class="page">3. Business process model</h2>
+<p>The model is drawn in <b>BPMN 2.0 with swimlanes</b> in <b>diagrams.net (draw.io)</b>. One pool has five lanes (Customer, SmartTicket Database, Payment Provider, Gate Staff, Event Organiser) with start and end events, 23 numbered tasks, six exclusive gateways, a 15-minute timer boundary event, a scheduler flow and a data store. Arrow labels show the information passed.</p>
+<p style="text-align:left">Published diagram: <a href="__DIAGRAM_LINK__">open the published diagram in diagrams.net</a> (the same link is in README.md, section “Phase I – Business Process Modeling”). Exported copy: <code>docs/business_process/business_process_diagram.pdf</code>. Editable source: <code>docs/business_process/business_process_model.drawio</code>.</p>
+
+<h2>4. Data-generating activities</h2>
+<p>Task numbers match the diagram. <span class="c">C</span> = create, <span class="r">R</span> = retrieve, <span class="u">U</span> = update. Table names are those of the Phase II design.</p>
+<table>
+<tr><th style="width:5%">#</th><th style="width:22%">Activity (actor)</th><th style="width:10%">Type</th><th>Information created or used</th></tr>
+<tr><td>1</td><td>Publish event, prices and seats (Organiser)</td><td><span class="c">C</span></td><td>New <code>EVENTS</code> row (status SCHEDULED, sales window), one <code>EVENT_PRICES</code> row per tier, one <code>TICKETS</code> row per seat (AVAILABLE).</td></tr>
+<tr><td>2</td><td>Browse open events and free seats (Customer)</td><td><span class="r">R</span></td><td>Event name, date, venue and prices; free seats per tier from <code>fn_available_seats</code>.</td></tr>
+<tr><td>4</td><td>Validate booking request (DB)</td><td><span class="r">R</span></td><td>Event status and sales window, seat status, the customer's ticket count for the event (<code>fn_customer_ticket_count</code>).</td></tr>
+<tr><td>5, 6</td><td>Refuse request (DB)</td><td><span class="c">C</span></td><td><code>AUDIT_LOG</code> row with status DENIED and the error: ORA-20003 (event closed), ORA-20001 (seat taken) or ORA-20002 (more than 6 tickets).</td></tr>
+<tr><td>7</td><td>Hold seats, create booking (DB)</td><td><span class="c">C</span> <span class="u">U</span></td><td>New <code>BOOKINGS</code> row (PENDING, hold expires in 15 min) and <code>BOOKING_ITEMS</code> rows with the price paid; <code>TICKETS</code> status AVAILABLE → HELD; audit row.</td></tr>
+<tr><td>10</td><td>Record payment, check amount (DB)</td><td><span class="c">C</span> <span class="r">R</span></td><td>New <code>PAYMENTS</code> row (method, amount, provider reference); booking total read with <code>fn_booking_total</code>.</td></tr>
+<tr><td>11</td><td>Reject payment (DB)</td><td><span class="u">U</span> <span class="c">C</span></td><td><code>PAYMENTS</code> status → FAILED; audit row DENIED (ORA-20005 amount mismatch).</td></tr>
+<tr><td>12</td><td>Confirm booking (DB)</td><td><span class="u">U</span> <span class="c">C</span></td><td><code>PAYMENTS</code> → COMPLETED, <code>BOOKINGS</code> → CONFIRMED, <code>TICKETS</code> → SOLD; audit row.</td></tr>
+<tr><td>13</td><td>Release expired holds (Scheduler)</td><td><span class="r">R</span> <span class="u">U</span> <span class="c">C</span></td><td>Cursor over PENDING bookings past <code>hold_expires_at</code>; <code>BOOKINGS</code> → EXPIRED, <code>TICKETS</code> → AVAILABLE; audit row.</td></tr>
+<tr><td>14</td><td>Receive e-ticket (Customer)</td><td><span class="r">R</span></td><td>Ticket id (encoded in the QR code), section, row, seat.</td></tr>
+<tr><td>17</td><td>Validate ticket at the gate (DB)</td><td><span class="r">R</span></td><td>Ticket status and event; earlier <code>GATE_SCANS</code> for the ticket.</td></tr>
+<tr><td>18</td><td>Record admission (DB)</td><td><span class="c">C</span> <span class="u">U</span></td><td>New <code>GATE_SCANS</code> row (ADMITTED, gate, time); <code>TICKETS</code> → USED; audit row.</td></tr>
+<tr><td>19</td><td>Record denied scan (DB)</td><td><span class="c">C</span></td><td>New <code>GATE_SCANS</code> row (DENIED, reason such as ALREADY_USED); audit row DENIED (ORA-20004).</td></tr>
+<tr><td>22</td><td>Monitor live dashboard (Organiser)</td><td><span class="r">R</span></td><td>Bookings, payments, ticket status, gate scans and denied attempts; <code>fn_occupancy_pct</code> and <code>pkg_reports</code>.</td></tr>
+</table>
+<p><b>Delete / archive.</b> No activity physically deletes a record. A cancelled or expired booking, a failed payment and a refused scan are kept and only change status, so the history stays complete for audit and reporting. <code>AUDIT_LOG</code> is append-only. Tasks 3, 8, 9, 15, 16, 20, 21 and 23 are actions by people or the payment provider that pass information on but do not write to the database themselves.</p>
+
+<h2 class="page">5. Process explanation</h2>
+<p><b>How the process begins.</b> The process starts when an event is approved for sale. The Event Organiser publishes it (task 1): the database stores the event, a price for each tier (VIP, Premium, Silver, Bronze) and one ticket row per seat, all <code>AVAILABLE</code>. From then on a customer can browse open events and see how many seats are free in each tier (task 2).</p>
+<p><b>Booking.</b> The customer selects up to six seats (task 3) and sends the event, the seat list and their customer code to SmartTicket. The procedure <code>sp_book_tickets</code> checks the request (task 4) and takes two decisions. First, is the event open, i.e. scheduled and inside its sales window? If not, the request is refused, an ORA-20003 entry is written to the audit log and the process ends. Second, are all the seats still free and would the customer stay within 6 tickets for this event? If not, the attempt is logged (ORA-20001 or ORA-20002) and the customer is sent back to choose other seats. When both checks pass, the seats become <code>HELD</code> and a <code>PENDING</code> booking is created with a 15-minute hold (task 7).</p>
+<p><b>Payment.</b> The customer pays with MTN MoMo or a card (task 8). The payment provider processes it and returns a reference and a result (task 9). <code>sp_record_payment</code> stores the payment and compares the amount with <code>fn_booking_total</code> (task 10). If the payment failed or the amount is wrong, it is marked <code>FAILED</code> and logged (task 11), and the customer decides whether to try again while the hold is still valid. If it succeeds, the payment is <code>COMPLETED</code>, the booking <code>CONFIRMED</code> and the seats <code>SOLD</code> (task 12), and the customer receives an e-ticket whose QR code carries the ticket id (task 14). If 15 minutes pass without payment, the timer on task 8 ends the customer's path; a scheduler job that runs every minute (task 13) marks the booking <code>EXPIRED</code> and returns the seats to sale.</p>
+<p><b>Gate admission.</b> On event day the customer shows the QR code (task 15) and gate staff scan it (task 16). The ticket id and gate code go to <code>sp_scan_ticket</code> (task 17), which decides whether the ticket is <code>SOLD</code>, belongs to this event and has not been used. If yes, an <code>ADMITTED</code> scan is recorded, the ticket becomes <code>USED</code> (task 18) and staff let the person in (task 20). If no, a <code>DENIED</code> scan with its reason is recorded (task 19) and staff refuse entry (task 21). A copied QR code therefore works only once.</p>
+<p><b>How information moves.</b> Information flows from people to the database as requests (seat list, payment reference, ticket id) and back as decisions (accepted, refused with a reason). Every change goes through PL/SQL, so no actor writes to a table directly, and each step leaves a status that the next step reads: AVAILABLE → HELD → SOLD → USED.</p>
+<p><b>Support for operations and management.</b> For daily operations, the process prevents double sales, limits scalping, frees unpaid seats and stops repeated entry without depending on staff judgement. For management, the organiser watches a live Power BI dashboard (task 22) that reads sales, occupancy and denied attempts directly from the same tables. When the data shows an event close to selling out, a spike in denied scans or a slow gate, the organiser decides what to do (task 23), for example opening another gate, releasing a held-back section or flagging a suspicious buyer.</p>
+</body></html>
