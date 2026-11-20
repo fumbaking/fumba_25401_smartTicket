@@ -62,9 +62,8 @@ Files stay in the folders that each phase's instructions require. This index gro
 | [data/raw/](data/raw/) | SeatGeek dataset exactly as downloaded: `venues.csv`, `performers.csv`, `events/` (30 daily files), `event-listings/` (30 daily files), publisher schema and dataset card. Found in Phase 0; stored unchanged. |
 | [data/events_all.csv](data/events_all.csv) · [data/event_listings_all.csv](data/event_listings_all.csv) | The daily files joined into one file each, with no values changed |
 | [data/dataset_card.md](data/dataset_card.md) | Source, licence, format, size, date collected, what one record represents, and the data-quality counts |
-| [data/README.md](data/README.md) | Short guide to the `data/` folder |
 | [docs/design/normalization.md](docs/design/normalization.md) | UNF → 1NF → 2NF → 3NF with real rows, mapping of every raw field, class-demo trace |
-| [docs/design/erd.png](docs/design/erd.png) · [erd.svg](docs/design/erd.svg) | Logical ERD, 16 tables, crow's-foot notation |
+| [docs/design/erd.png](docs/design/erd.png) | Logical ERD, 16 tables, crow's-foot notation |
 | [docs/design/data_dictionary.md](docs/design/data_dictionary.md) | Every column: meaning, key, required, unique; relationships with cardinality and optionality |
 
 **Logical ERD (16 tables, 3NF)**
@@ -197,7 +196,7 @@ Links: [Hugging Face](https://huggingface.co/datasets/rebrowser/seatgeek-dataset
 | Venues (with capacity, coordinates) | 194 |
 | Performers | 265 |
 
-Details, sample records and known limitations are in [data/README.md](data/README.md).
+Details, data-quality counts and known limitations are in [data/dataset_card.md](data/dataset_card.md).
 
 ## 4. Proposed solution
 
