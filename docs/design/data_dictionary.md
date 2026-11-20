@@ -1,6 +1,6 @@
 # Data Dictionary (logical design)
 
-**Project:** SmartTicket · **Student:** FUMBA Huriro (25401) · **Phase:** II
+**Project:** SmartTicket · **Student:** FUMBA Huriro (25401) · **Phase:** II, Data Sourcing, Normalisation and Logical Design
 
 **Key:** PK = primary key, FK = foreign key. **Req.** = required (NOT NULL). **Unique** shows a unique column or a combination of columns. Oracle data types and sizes are left out on purpose; they are added in Phase IV. Columns marked *(raw: …)* come from the SeatGeek dataset; the rest are created by SmartTicket.
 

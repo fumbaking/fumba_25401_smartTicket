@@ -1,6 +1,6 @@
 # Research Log — Smart Event Ticketing System (SmartTicket)
 
-**Student:** FUMBA Huriro · **ID:** 25401 · **Course:** INSY 8311 Database Development with PL/SQL · **Instructor:** Eric Maniraguha
+**Student:** FUMBA Huriro · **ID:** 25401 · **Course:** INSY 8311 Database Development with PL/SQL · **Instructor:** Eric Maniraguha · **Phase:** 0
 
 
 

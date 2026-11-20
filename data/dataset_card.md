@@ -1,6 +1,6 @@
 # Dataset Card: SeatGeek Events & Ticket Listings (free sample)
 
-**Project:** SmartTicket, Smart Event Ticketing System · **Student:** FUMBA Huriro (25401) · **Phase:** II
+**Project:** SmartTicket, Smart Event Ticketing System · **Student:** FUMBA Huriro (25401) · **Phase:** II, Data Sourcing, Normalisation and Logical Design
 
 ## 1. Source
 

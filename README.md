@@ -12,12 +12,51 @@
 | **Repository** | https://github.com/fumbaking/fumba_25401_smartTicket |
 | **Current phase** | Phase II: Data Sourcing, Normalisation and Logical Design |
 
-### Phase progress
+## Deliverables by phase
 
-| Phase | Deliverable | Where |
+Files stay in the folders that each phase's instructions require. This index groups them by phase.
+
+| Phase | Focus | Status |
 |---|---|---|
-| 0 | Research log, proposal, presentation | [docs/research](docs/research/research_log.md), [docs/proposal](docs/proposal/), [docs/presentation](docs/presentation/) |
-| II | Raw data, dataset card, normalisation UNF→3NF, ERD, data dictionary | [data/dataset_card.md](data/dataset_card.md), [docs/design/normalization.md](docs/design/normalization.md), [docs/design/erd.png](docs/design/erd.png), [docs/design/data_dictionary.md](docs/design/data_dictionary.md) |
+| 0 | Research, data source, proposal | ✅ Done |
+| I | Business process modelling (BPMN/UML swimlane) | ⏳ Not started |
+| II | Data sourcing, normalisation, logical design | ✅ Done |
+| III | Pluggable database (PDB) creation | ⏳ Not started |
+| IV | Tables and data loading | ⏳ Not started |
+| V | PL/SQL development | ⏳ Not started |
+| VI | Advanced programming and auditing | ⏳ Not started |
+| VII | Documentation, innovation, final presentation | ⏳ Not started |
+
+### Phase 0: Research, Data Source and Project Proposal
+
+| File | What it is |
+|---|---|
+| [README.md](README.md) | Project overview: problem, objectives, data source, innovation, planned tables and PL/SQL, references |
+| [docs/research/research_log.md](docs/research/research_log.md) | Research log with 8 sources (APA, type, link, key finding, gap) |
+| [docs/proposal/FUMBA_25401_SmartTicket_Proposal.pdf](docs/proposal/FUMBA_25401_SmartTicket_Proposal.pdf) · [.docx](docs/proposal/FUMBA_25401_SmartTicket_Proposal.docx) | 2-page proposal |
+| [docs/presentation/FUMBA_25401_SmartTicket_Phase0.pptx](docs/presentation/FUMBA_25401_SmartTicket_Phase0.pptx) · [.pdf](docs/presentation/FUMBA_25401_SmartTicket_Phase0.pdf) | 12-slide presentation |
+
+### Phase I: Business Process Modelling
+
+*Not started yet.*
+
+### Phase II: Data Sourcing, Normalisation and Logical Design
+
+| File | What it is |
+|---|---|
+| [data/raw/](data/raw/) | SeatGeek dataset exactly as downloaded: `venues.csv`, `performers.csv`, `events/` (30 daily files), `event-listings/` (30 daily files), publisher schema and dataset card. Found in Phase 0; stored unchanged. |
+| [data/events_all.csv](data/events_all.csv) · [data/event_listings_all.csv](data/event_listings_all.csv) | The daily files joined into one file each, with no values changed |
+| [data/dataset_card.md](data/dataset_card.md) | Source, licence, format, size, date collected, what one record represents, and the data-quality counts |
+| [data/README.md](data/README.md) | Short guide to the `data/` folder |
+| [docs/design/normalization.md](docs/design/normalization.md) | UNF → 1NF → 2NF → 3NF with real rows, mapping of every raw field, class-demo trace |
+| [docs/design/erd.png](docs/design/erd.png) · [erd.svg](docs/design/erd.svg) | Logical ERD, 16 tables, crow's-foot notation |
+| [docs/design/data_dictionary.md](docs/design/data_dictionary.md) | Every column: meaning, key, required, unique; relationships with cardinality and optionality |
+| [scripts/phase2/data_quality_profile.js](scripts/phase2/data_quality_profile.js) · [csv.js](scripts/phase2/csv.js) | Script that produces the quality counts in the dataset card |
+| [scripts/phase2/erd.js](scripts/phase2/erd.js) | Script that draws `erd.png` |
+
+### Phases III–VII
+
+*Not started yet.* New files will be listed under their phase here.
 
 ---
 
@@ -142,16 +181,18 @@ The dashboard only *reads* data. All rules are enforced by the PL/SQL procedures
 ```
 fumba_25401_smartTicket/
 ├── README.md
+├── README.md             # [Phase 0] project overview, updated every phase
 ├── data/
-│   ├── raw/              # dataset exactly as downloaded (never edited)
-│   └── dataset_card.md   # source, licence, size, data-quality counts
+│   ├── raw/              # [Phase 0 / II] dataset exactly as downloaded (never edited)
+│   ├── *_all.csv         # [Phase II] daily files joined, values unchanged
+│   └── dataset_card.md   # [Phase II] source, licence, size, data-quality counts
 ├── docs/
-│   ├── research/         # research_log.md
-│   ├── proposal/         # Phase 0 proposal (.docx and .pdf)
-│   ├── presentation/     # Phase 0 slides (.pptx and .pdf)
-│   └── design/           # Phase II: normalization.md, erd.png, data_dictionary.md
-├── scripts/phase2/       # data-quality profile and ERD generator (Node.js)
-└── (later phases add: diagrams/, database/, innovation/)
+│   ├── research/         # [Phase 0] research_log.md
+│   ├── proposal/         # [Phase 0] proposal (.docx and .pdf)
+│   ├── presentation/     # [Phase 0] slides (.pptx and .pdf)
+│   └── design/           # [Phase II] normalization.md, erd.png, data_dictionary.md
+├── scripts/phase2/       # [Phase II] data-quality profile and ERD generator (Node.js)
+└── (later phases add: diagrams/ [I], database/ [III–VI], innovation/ [VII])
 ```
 
 ## 9. References
