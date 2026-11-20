@@ -10,7 +10,14 @@
 | **Instructor** | Eric Maniraguha |
 | **Academic year** | 2026–2027, Semester I |
 | **Repository** | https://github.com/fumbaking/fumba_25401_smartTicket |
-| **Current phase** | Phase 0: Research, Data Source and Project Proposal |
+| **Current phase** | Phase II: Data Sourcing, Normalisation and Logical Design |
+
+### Phase progress
+
+| Phase | Deliverable | Where |
+|---|---|---|
+| 0 | Research log, proposal, presentation | [docs/research](docs/research/research_log.md), [docs/proposal](docs/proposal/), [docs/presentation](docs/presentation/) |
+| II | Raw data, dataset card, normalisation UNF→3NF, ERD, data dictionary | [data/dataset_card.md](data/dataset_card.md), [docs/design/normalization.md](docs/design/normalization.md), [docs/design/erd.png](docs/design/erd.png), [docs/design/data_dictionary.md](docs/design/data_dictionary.md) |
 
 ---
 
@@ -53,10 +60,13 @@ Details, sample records and known limitations are in [data/README.md](data/READM
 
 SmartTicket is an Oracle 19c+ pluggable database. **All business rules live in PL/SQL.** A sale succeeds only when the seat is free, the event is open, the buyer is under their limit and the payment matches. Each ticket can be scanned in only once. Every action, including refused ones, is written to an audit log, and Power BI reads the data live.
 
-## 5. Planned tables
+## 5. Planned tables (16, in 3NF)
+
+The full design is in [docs/design/](docs/design/): see the [ERD](docs/design/erd.png) and the [data dictionary](docs/design/data_dictionary.md).
 
 | # | Table | Purpose | Key relationships |
 |---|---|---|---|
+| 0 | `CATEGORIES` | Category hierarchy (sports → basketball → nba); added in Phase II | Self-referencing; 1 category → many events, performers |
 | 1 | `VENUES` | Venue, city, country, capacity, latitude/longitude | 1 venue → many sections, events |
 | 2 | `PRICE_TIERS` | VIP, Premium, Silver, Bronze | 1 tier → many sections |
 | 3 | `SECTIONS` | Seating sections of a venue (e.g. "Section 211") | FK venue, FK tier |
@@ -66,8 +76,8 @@ SmartTicket is an Oracle 19c+ pluggable database. **All business rules live in P
 | 7 | `EVENT_PRICES` | Price in RWF per event and tier | FK event, FK tier |
 | 8 | `TICKETS` | One row per seat per event: row, seat, status (AVAILABLE / HELD / SOLD / USED / CANCELLED) | FK event, FK section; UNIQUE (event, section, row, seat) |
 | 9 | `CUSTOMERS` | Anonymous buyer code, region, registration date | 1 customer → many bookings |
-| 10 | `BOOKINGS` | Booking header: customer, time, status, total | FK customer |
-| 11 | `BOOKING_ITEMS` | Tickets in a booking, with price paid | FK booking, FK ticket (UNIQUE ticket) |
+| 10 | `BOOKINGS` | Booking header: customer, time, hold expiry, status (the total is computed by `fn_booking_total`) | FK customer |
+| 11 | `BOOKING_ITEMS` | Tickets in a booking, with price paid | FK booking, FK ticket; a ticket is in at most one active booking (`trg_no_double_sale`) |
 | 12 | `PAYMENTS` | MoMo / card / cash, amount, reference, status | FK booking |
 | 13 | `GATE_SCANS` | Every scan at the gate: time, gate, result (ADMITTED / DENIED) | FK ticket |
 | 14 | `PUBLIC_HOLIDAYS` | Dates used by the restriction rule | — |
@@ -132,12 +142,16 @@ The dashboard only *reads* data. All rules are enforced by the PL/SQL procedures
 ```
 fumba_25401_smartTicket/
 ├── README.md
-├── data/                 # real dataset (raw + merged CSVs) and data README
+├── data/
+│   ├── raw/              # dataset exactly as downloaded (never edited)
+│   └── dataset_card.md   # source, licence, size, data-quality counts
 ├── docs/
 │   ├── research/         # research_log.md
 │   ├── proposal/         # Phase 0 proposal (.docx and .pdf)
-│   └── presentation/     # Phase 0 slides (.pptx and .pdf)
-└── (later phases add: diagrams/, database/, scripts/, innovation/)
+│   ├── presentation/     # Phase 0 slides (.pptx and .pdf)
+│   └── design/           # Phase II: normalization.md, erd.png, data_dictionary.md
+├── scripts/phase2/       # data-quality profile and ERD generator (Node.js)
+└── (later phases add: diagrams/, database/, innovation/)
 ```
 
 ## 9. References
