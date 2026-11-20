@@ -91,6 +91,72 @@ Oracle Database 21c Enterprise Edition 21.3 (local install, CDB `orcl`).
 | [database/setup/05_verify.sql](database/setup/05_verify.sql) | Verification queries; output in [screenshots/05_verify_output.txt](screenshots/05_verify_output.txt) |
 | [screenshots/](screenshots/) | SQL\*Plus, SQL Developer and EM Express screenshots for Tasks 1–5 |
 
+#### Evidence
+
+**Task 1: PDB created, opened and state saved**
+
+![Task 1: create PDB](screenshots/01_task1_create_pdb.png)
+
+**Task 2: connected as fumba_admin to the PDB, with the DBA role**
+
+![Task 2: admin connection](screenshots/02_task2_admin_connection.png)
+
+**Task 3: tablespaces, user defaults and quotas (SQL Developer)**
+
+![Task 3: tablespaces](screenshots/03_task3_tablespaces_sqldeveloper.png)
+
+**Task 4: archive log mode before (NOARCHIVELOG) and after (ARCHIVELOG)**
+
+![Task 4: archive log before](screenshots/04_task4_archivelog_before.jpg)
+
+![Task 4: archive log after](screenshots/04_task4_archivelog_after.png)
+
+**Task 5: EM Express on https://localhost:5501/em as fumba_admin**
+
+![Task 5: EM Express home](screenshots/05_task5_em_express_home.png)
+
+![Task 5: EM Express tablespaces](screenshots/05_task5_em_express_tablespaces.png)
+
+**Task 6: verification output** ([screenshots/05_verify_output.txt](screenshots/05_verify_output.txt))
+
+```text
+PDB_NAME                       USERNAME       RUN_AT
+------------------------------ -------------- -------------------
+B_25401_FUMBA_SMARTTICKET_DB   FUMBA_ADMIN    2026-11-20 19:51:50
+
+NAME                           OPEN_MODE    CREATED
+------------------------------ ------------ ----------------
+B_25401_FUMBA_SMARTTICKET_DB   READ WRITE   2026-11-20 19:29
+
+USERNAME       DEFAULT_TABLESPACE TEMPORARY_TABLESPACE ACCOUNT_STATUS
+-------------- ------------------ -------------------- --------------
+FUMBA_ADMIN    SMARTTICKET_DATA   SMARTTICKET_TEMP     OPEN
+
+GRANTED_ROLE
+------------
+DBA
+PDB_DBA
+
+TABLESPACE_NAME    MAX_QUOTA
+------------------ ----------
+SMARTTICKET_DATA   UNLIMITED
+SMARTTICKET_IDX    UNLIMITED
+
+TABLESPACE_NAME    CONTENTS      SIZE_MB AUTO    NEXT_MB     MAX_MB
+------------------ ---------- ---------- ---- ---------- ----------
+SMARTTICKET_DATA   PERMANENT         100 YES          10       1024
+SMARTTICKET_IDX    PERMANENT          50 YES          10        500
+SMARTTICKET_TEMP   TEMPORARY          50 YES          10        500
+
+NAME                           LOG_MODE
+------------------------------ ------------
+ORCL                           ARCHIVELOG
+
+EM_HTTPS_PORT
+-------------
+         5501
+```
+
 ### Phases IV–VII
 
 *Not started yet.* New files will be listed under their phase here.
